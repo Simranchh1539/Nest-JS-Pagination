@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 
 export class StudentResponseDto {
-  @Expose()
-  _id: string;
+  @Expose({ name: '_id' })
+  id: string;
 
   @Expose()
   name: string;
@@ -13,8 +13,8 @@ export class StudentResponseDto {
   @Expose()
   email: string;
 
-  @Expose({ name: 'fatherName' })
-  father_name?: string;
+  @Expose()
+  fatherName?: string;
 
   @Expose()
   courses?: any[];

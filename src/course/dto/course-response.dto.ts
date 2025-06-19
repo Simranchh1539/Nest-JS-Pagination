@@ -2,8 +2,8 @@ import { Expose } from 'class-transformer';
 
 
 export class CourseResponseDto {
-  @Expose()
-  _id: string;
+  @Expose({ name: '_id' })
+  id: string;
 
   @Expose()
   title: string;
@@ -12,10 +12,10 @@ export class CourseResponseDto {
   description: string;
 
   @Expose({ name: 'duration' })
-  course_duration?: string;
+  courseDuration?: string;
 
   @Expose({ name: 'level' })
-  course_level?: string;
+  courseLevel?: string;
 
   @Expose()
   teacher: any;

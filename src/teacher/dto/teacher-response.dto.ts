@@ -1,8 +1,8 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 
 export class TeacherResponseDto {
-  @Expose()
-  _id: string;
+  @Expose({ name: '_id' })
+  id: string;
 
   @Expose()
   name: string;
