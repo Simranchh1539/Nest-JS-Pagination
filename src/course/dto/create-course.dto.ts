@@ -10,15 +10,15 @@ export class CreateCourseDto {
 
   @IsOptional()
   @IsString()
-  @Transform(({ obj }) => obj.course_duration)
+  @Transform(({ obj }) => obj.courseDuration)
   duration?: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ obj }) => obj.course_level)
+  @Transform(({ obj }) => obj.courseLevel)
   level?: string;
 
   @IsMongoId()
-  @Transform(({ obj }) => obj.teacher_id)
+  @Transform(({ obj }) => obj.teacherId)
   teacher: string;
 }

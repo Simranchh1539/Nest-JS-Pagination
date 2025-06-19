@@ -13,12 +13,11 @@ export class StudentDto {
 
   @IsOptional()
   @IsString()
-  @Transform(({ obj }) => obj.father_name)
   fatherName?: string;
 
   @IsOptional()
   @IsArray()
   @IsMongoId({ each: true })
-  @Transform(({ obj }) => obj.course_ids)
+  @Transform(({ obj }) => obj.courseIds)
   courses?: string[];
 }
