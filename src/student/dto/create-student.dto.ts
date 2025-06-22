@@ -1,7 +1,7 @@
 import { IsEmail, IsOptional, IsString, IsArray, IsMongoId, IsNumber } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class StudentDto {
+export class StudentRequestDto {
   @IsString()
   name: string;
 
