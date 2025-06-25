@@ -1,7 +1,7 @@
 import { IsString, IsOptional, IsMongoId } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class CreateCourseDto {
+export class CourseRequestDto {
   @IsString()
   title: string;
 
