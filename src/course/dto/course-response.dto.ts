@@ -1,8 +1,10 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
+import { TeacherResponseDto } from "src/teacher/dto/teacher-response.dto";
 
 
 export class CourseResponseDto {
   @Expose({ name: '_id' })
+  @Transform(({ obj }) => obj._id?.toString())
   id: string;
 
   @Expose()
@@ -18,5 +20,6 @@ export class CourseResponseDto {
   courseLevel?: string;
 
   @Expose()
-  teacher: any;
+  @Type(() => TeacherResponseDto)
+  teacher: TeacherResponseDto;
 }
