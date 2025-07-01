@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsMongoId } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 export class CourseRequestDto {
   @IsString()
@@ -10,15 +10,16 @@ export class CourseRequestDto {
 
   @IsOptional()
   @IsString()
-  @Transform(({ obj }) => obj.courseDuration)
+  @Expose({ name: 'courseDuration' })
   duration?: string;
 
   @IsOptional()
   @IsString()
-  @Transform(({ obj }) => obj.courseLevel)
+  @Expose({ name: 'courseLevel' })
   level?: string;
 
+  @IsOptional()
   @IsMongoId()
-  @Transform(({ obj }) => obj.teacherId)
+  @Expose({ name: 'teacherId' })
   teacher: string;
 }

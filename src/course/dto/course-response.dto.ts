@@ -1,8 +1,11 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { TeacherResponseDto } from "src/teacher/dto/teacher-response.dto";
+import { TransformMongoId } from "src/utils/decorators/custom.decorators";
 
 
 export class CourseResponseDto {
   @Expose({ name: '_id' })
+  @TransformMongoId()
   id: string;
 
   @Expose()
@@ -18,5 +21,6 @@ export class CourseResponseDto {
   courseLevel?: string;
 
   @Expose()
-  teacher: any;
+  @Type(() => TeacherResponseDto)
+  teacher: TeacherResponseDto;
 }
