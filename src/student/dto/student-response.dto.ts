@@ -1,8 +1,9 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
+import { TransformMongoId } from "src/utils/decorators/custom.decorators";
 
 export class StudentResponseDto {
   @Expose({ name: '_id' })
-  @Transform(({ obj }) => obj._id?.toString())
+  @TransformMongoId()
   id: string;
 
   @Expose()
