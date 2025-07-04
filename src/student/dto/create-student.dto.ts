@@ -1,5 +1,6 @@
 import { IsEmail, IsOptional, IsString, IsArray, IsMongoId, IsNumber } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Expose } from 'class-transformer';
+import { IsUniqueArray } from "src/utils/decorators/custom.decorators";
 
 export class StudentRequestDto {
   @IsString()
@@ -18,6 +19,7 @@ export class StudentRequestDto {
   @IsOptional()
   @IsArray()
   @IsMongoId({ each: true })
-  @Transform(({ obj }) => obj.courseIds)
+  @Expose({name:'courseIds'})
+  @IsUniqueArray({ message: 'You’ve selected the same course more than once. Please ensure each course is only listed once.' })
   courses?: string[];
 }
