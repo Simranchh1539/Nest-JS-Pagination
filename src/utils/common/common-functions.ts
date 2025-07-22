@@ -67,3 +67,13 @@ export const paginationResponse = (
     range,
   };
 }
+
+export const paginateQuery = (query: any, page: number, pageSize?: number) => {
+  const skip = pageSize ? (page - 1) * pageSize : 0;
+
+  if (pageSize) {
+    query.skip(skip).limit(pageSize);
+  }
+
+  return query;
+}
