@@ -16,8 +16,18 @@ export class CourseService {
     return createdCourseData.save();
   }
 
-  async findAllCourses(): Promise<Course[]> {
-    return this.courseModel.find().populate('teacher').lean();
+  async findAllCourses(page: number, pageSize?: number): Promise<{ coursesData: Course[]; total: number }> {
+     const skip = pageSize ? (page - 1) * pageSize : 0;
+     const query = this.courseModel.find().populate('teacher');
+
+     if (pageSize) {
+       query.skip(skip).limit(pageSize);
+     }
+
+     const coursesData = await query.lean();
+     const total = await this.courseModel.countDocuments();
+
+     return { coursesData, total };
   }
 
   async findCourseById(id: string): Promise<Course> {
@@ -29,17 +39,25 @@ export class CourseService {
     return courseData as Course;
   }
 
-  async updateCourse(id: string, courseRequestData: CourseRequestDto): Promise<Course> {
+  async updateCourse(
+    id: string,
+    courseRequestData: CourseRequestDto,
+  ): Promise<Course> {
     const updatedCourseData = await this.courseModel
-      .findByIdAndUpdate(id, courseRequestData, { new: true, runValidators: true })
+      .findByIdAndUpdate(id, courseRequestData, {
+        new: true,
+        runValidators: true,
+      })
       .populate('teacher')
       .lean();
-    checkNotFoundError(updatedCourseData,'Course',id)
+    checkNotFoundError(updatedCourseData, 'Course', id);
     return updatedCourseData as Course;
   }
 
   async deleteCourse(id: string): Promise<void> {
-    const deletedCourseData = await this.courseModel.findByIdAndDelete(id).lean();
-    checkNotFoundError(deletedCourseData,'Course',id)
+    const deletedCourseData = await this.courseModel
+      .findByIdAndDelete(id)
+      .lean();
+    checkNotFoundError(deletedCourseData, 'Course', id);
   }
 }
