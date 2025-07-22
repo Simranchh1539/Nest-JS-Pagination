@@ -15,8 +15,21 @@ export class TeacherService {
     return await newTeacherData.save();
   }
 
-  async findAllTeachers(): Promise<Teacher[]> {
-    return await this.teacherModel.find().lean();
+  async findAllTeachers(
+    page: number,
+    pageSize?: number,
+  ): Promise<{ teachersData: Teacher[]; total: number }> {
+    const skip = pageSize ? (page - 1) * pageSize : 0;
+    const query = this.teacherModel.find();
+
+    if (pageSize) {
+      query.skip(skip).limit(pageSize);
+    }
+
+    const teachersData = await query.lean();
+    const total = await this.teacherModel.countDocuments();
+
+    return { teachersData , total };
   }
 
   async findTeacher(id: string): Promise<Teacher> {
