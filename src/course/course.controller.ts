@@ -11,8 +11,8 @@ import {
 import { CourseService } from './course.service';
 import { CourseRequestDto } from './dto/create-course.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
-import { checkPaginationExist, paginationResponse, transformResponse } from "src/utils/common/common-functions";
-import { PaginationDetailsInput } from "src/utils/interfaces/interfaces";
+import { checkPaginationExist, paginationResponse, transformResponse } from 'src/utils/common/common-functions';
+import { PaginationDetailsInput } from 'src/utils/interfaces/interfaces';
 
 @Controller('course')
 export class CourseController {
@@ -26,22 +26,22 @@ export class CourseController {
 
   @Get()
   async findAllCourses(@Query() query: PaginationDetailsInput) {
-     const { page, pageSize, hasPagination } = checkPaginationExist(query);
-    
-        const { coursesData, total } = await this.courseService.findAllCourses(
-          page,
-          pageSize,
-        );
-    
-        const transformedData = transformResponse(CourseResponseDto, coursesData);
-    
-        return paginationResponse(
-          transformedData,
-          total,
-          page,
-          pageSize,
-          hasPagination,
-        )
+    const { page, pageSize, hasPagination } = checkPaginationExist(query)
+
+    const { coursesData, total } = await this.courseService.findAllCourses(
+      page,
+      pageSize,
+    )
+
+    const transformedData = transformResponse(CourseResponseDto, coursesData)
+
+    return paginationResponse(
+      transformedData,
+      total,
+      page,
+      pageSize,
+      hasPagination,
+    )
   }
 
   @Get(':id')

@@ -36,25 +36,17 @@ export class CourseService {
     return courseData as Course;
   }
 
-  async updateCourse(
-    id: string,
-    courseRequestData: CourseRequestDto,
-  ): Promise<Course> {
+  async updateCourse(id: string,courseRequestData: CourseRequestDto): Promise<Course> {
     const updatedCourseData = await this.courseModel
-      .findByIdAndUpdate(id, courseRequestData, {
-        new: true,
-        runValidators: true,
-      })
+      .findByIdAndUpdate(id, courseRequestData, { new: true, runValidators: true})
       .populate('teacher')
       .lean();
-    checkNotFoundError(updatedCourseData, 'Course', id);
+    checkNotFoundError(updatedCourseData,'Course',id);
     return updatedCourseData as Course;
   }
 
   async deleteCourse(id: string): Promise<void> {
-    const deletedCourseData = await this.courseModel
-      .findByIdAndDelete(id)
-      .lean();
-    checkNotFoundError(deletedCourseData, 'Course', id);
+    const deletedCourseData = await this.courseModel.findByIdAndDelete(id).lean();
+    checkNotFoundError(deletedCourseData,'Course',id);
   }
 }
