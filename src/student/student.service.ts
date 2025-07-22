@@ -16,8 +16,21 @@ export class StudentService {
     return studentData.save();
   }
 
-  async findAllStudents(): Promise<Student[]> {
-    return this.studentModel.find().populate('courses').lean();
+  async findAllStudents(
+    page: number,
+    pageSize?: number,
+  ): Promise<{ studentsData: Student[]; total: number }> {
+    const skip = pageSize ? (page - 1) * pageSize : 0;
+    const query = this.studentModel.find().populate('courses');
+
+    if (pageSize) {
+      query.skip(skip).limit(pageSize);
+    }
+
+    const studentsData = await query.lean();
+    const total = await this.studentModel.countDocuments();
+
+    return { studentsData, total };
   }
 
   async findStudentById(id: string): Promise<Student> {

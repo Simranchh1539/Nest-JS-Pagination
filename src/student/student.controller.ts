@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { StudentRequestDto } from "./dto/create-student.dto";
 import { StudentService } from "./student.service";
 import { StudentResponseDto } from "./dto/student-response.dto";
-import { transformResponse } from "src/utils/common/common-functions";
+import { checkPaginationExist, paginationResponse, transformResponse } from "src/utils/common/common-functions";
+import { PaginationDetailsInput } from "src/utils/interfaces/interfaces";
 
 @Controller('student')
 export class StudentController {
@@ -15,9 +16,23 @@ export class StudentController {
   }
 
   @Get()
-  async findAllStudents() {
-    const studentsData = await this.studentService.findAllStudents();
-    return transformResponse(StudentResponseDto,studentsData)
+  async findAllStudents(@Query() query: PaginationDetailsInput) {
+    const { page, pageSize, hasPagination } = checkPaginationExist(query);
+
+    const { studentsData , total } = await this.studentService.findAllStudents(
+      page,
+      pageSize,
+    );
+
+    const transformedData = transformResponse(StudentResponseDto, studentsData);
+
+    return paginationResponse(
+      transformedData,
+      total,
+      page,
+      pageSize,
+      hasPagination,
+    )
   }
 
   @Get(':id')
