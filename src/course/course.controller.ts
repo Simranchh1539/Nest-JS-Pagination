@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CourseRequestDto } from './dto/create-course.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
-import { transformResponse } from "src/utils/common/common-functions";
+import { checkPaginationExist, paginationResponse, transformResponse } from 'src/utils/common/common-functions';
+import { PaginationDetailsInput } from 'src/utils/interfaces/interfaces';
 
 @Controller('course')
 export class CourseController {
@@ -23,9 +25,23 @@ export class CourseController {
   }
 
   @Get()
-  async findAllCourses() {
-    const coursesData = await this.courseService.findAllCourses();
-    return transformResponse(CourseResponseDto, coursesData)
+  async findAllCourses(@Query() query: PaginationDetailsInput) {
+    const { page, pageSize, hasPagination } = checkPaginationExist(query)
+
+    const { coursesData, total } = await this.courseService.findAllCourses(
+      page,
+      pageSize,
+    )
+
+    const transformedData = transformResponse(CourseResponseDto, coursesData)
+
+    return paginationResponse(
+      transformedData,
+      total,
+      page,
+      pageSize,
+      hasPagination,
+    )
   }
 
   @Get(':id')

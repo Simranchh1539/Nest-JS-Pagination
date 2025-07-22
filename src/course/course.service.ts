@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Course } from './schema/course.schema';
 import { CourseRequestDto } from './dto/create-course.dto';
-import { checkNotFoundError } from 'src/utils/common/common-functions';
+import { checkNotFoundError, paginateQuery } from 'src/utils/common/common-functions';
 
 @Injectable()
 export class CourseService {
@@ -16,8 +16,15 @@ export class CourseService {
     return createdCourseData.save();
   }
 
-  async findAllCourses(): Promise<Course[]> {
-    return this.courseModel.find().populate('teacher').lean();
+  async findAllCourses(page: number, pageSize?: number): Promise<{ coursesData: Course[]; total: number }> {
+     let query = this.courseModel.find().populate('teacher');
+
+     query = paginateQuery(query,page,pageSize)
+
+     const coursesData = await query.lean();
+     const total = await this.courseModel.countDocuments();
+
+     return { coursesData, total };
   }
 
   async findCourseById(id: string): Promise<Course> {

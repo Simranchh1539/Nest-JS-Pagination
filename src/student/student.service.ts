@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Student } from "./schema/student.schema";
 import { Model } from "mongoose";
 import { StudentRequestDto } from "./dto/create-student.dto";
-import { checkNotFoundError } from "src/utils/common/common-functions";
+import { checkNotFoundError, paginateQuery } from "src/utils/common/common-functions";
 
 @Injectable()
 export class StudentService {
@@ -16,8 +16,18 @@ export class StudentService {
     return studentData.save();
   }
 
-  async findAllStudents(): Promise<Student[]> {
-    return this.studentModel.find().populate('courses').lean();
+  async findAllStudents(
+    page: number,
+    pageSize?: number,
+  ): Promise<{ studentsData: Student[]; total: number }> {
+    let query = this.studentModel.find().populate('courses');
+
+    query = paginateQuery(query,page,pageSize)
+
+    const studentsData = await query.lean();
+    const total = await this.studentModel.countDocuments();
+
+    return { studentsData, total };
   }
 
   async findStudentById(id: string): Promise<Student> {

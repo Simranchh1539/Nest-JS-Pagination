@@ -5,12 +5,15 @@ import {
   Get,
   Param,
   Post,
-  Put
+  Put,
+  Query
 } from '@nestjs/common';
 import { TeacherService } from './teacher.service';
 import { TeacherRequestDto } from './dto/create-teacher.dto';
 import { plainToInstance } from 'class-transformer';
 import { TeacherResponseDto } from './dto/teacher-response.dto';
+import { checkPaginationExist, paginationResponse, transformResponse } from "src/utils/common/common-functions";
+import { PaginationDetailsInput } from "src/utils/interfaces/interfaces";
 
 @Controller('teacher')
 export class TeacherController {
@@ -25,13 +28,17 @@ export class TeacherController {
   }
 
   @Get()
-  async findAllTeachers() {
-    const teachersData = await this.teacherService.findAllTeachers();
-    return teachersData.map((teacherData) =>
-      plainToInstance(TeacherResponseDto, teacherData, {
-        excludeExtraneousValues: true,
-      }),
-    );
+  async findAllTeachers(@Query() query: PaginationDetailsInput) {
+    const { page, pageSize, hasPagination } = checkPaginationExist(query)
+
+    const { teachersData, total } = await this.teacherService.findAllTeachers(
+      page,
+      pageSize,
+    )
+
+    const transformedData = transformResponse(TeacherResponseDto, teachersData)
+
+    return paginationResponse(transformedData, total, page, pageSize, hasPagination)
   }
 
   @Get(':id')
